@@ -1,0 +1,46 @@
+trigger:
+  - main
+
+variables:
+- group: frontend-vars
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self
+
+  - script: |
+      set -ex
+      echo "Contenido del repo (front está en la raíz):"
+      pwd
+      ls -la
+    displayName: 'Ver archivos del frontend'
+
+  - task: AWSShellScript@1
+    displayName: 'Publicar frontend en S3 y invalidar CloudFront'
+    inputs:
+      awsCredentials: 'aws-reto-cloud-SantiagoG'
+      regionName: 'us-east-1'
+      scriptType: 'inline'
+      inlineScript: |
+        set -ex
+
+        echo "Sincronizando archivos estáticos a S3..."
+
+        # Si tus archivos HTML/CSS/JS están en la raíz, usamos "."
+        # Excluimos cosas que no deben ir al bucket
+        aws s3 sync . "s3://$(S3_BUCKET_NAME)" \
+          --delete \
+          --exclude ".git/*" \
+          --exclude ".azure-pipelines/*" \
+          --exclude "*.yml" \
+          --exclude "*.yaml" \
+          --exclude "README*"
+
+        echo "Creando invalidación en CloudFront..."
+        aws cloudfront create-invalidation \
+          --distribution-id "$(CLOUDFRONT_DISTRIBUTION_ID)" \
+          --paths "/*"
+
+        echo "Deploy de frontend completado."
