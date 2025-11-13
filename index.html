@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tienda de camisetas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Tienda de camisetas</h1>
+    <p>Demo en AWS: S3 + CloudFront + Lambda + RDS</p>
+  </header>
+
+  <main class="main">
+    <section class="products-section">
+      <h2>Camisetas disponibles</h2>
+      <div id="products-container" class="products-grid">
+      </div>
+      <div id="products-error" class="message error hidden"></div>
+    </section>
+
+    <aside class="cart-section">
+      <h2>Carrito</h2>
+      <div id="cart-items" class="cart-items">
+        <p class="empty-cart">Tu carrito está vacío</p>
+      </div>
+      <div class="cart-summary">
+        <span>Total:</span>
+        <span id="cart-total" class="cart-total">$0.00</span>
+      </div>
+      <button id="checkout-btn" class="btn-primary" disabled>Confirmar pedido</button>
+      <div id="order-message" class="message hidden"></div>
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
